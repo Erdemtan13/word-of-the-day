@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word of the Day</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 20%;
+            background-color: #f7f7f7;
+        }
+        h1 {
+            font-size: 3rem;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1 id="word">Loading...</h1>
+
+    <script>
+        // Fetch the RSS feed
+        fetch('https://www.merriam-webster.com/wotd/feed/rss2')
+            .then(response => response.text())
+            .then(data => {
+                // Parse the RSS feed to extract the word
+                const parser = new DOMParser();
+                const rss = parser.parseFromString(data, "text/xml");
+                const wordOfTheDay = rss.querySelector("item title").textContent;
+
+                // Display the word
+                document.getElementById("word").textContent = wordOfTheDay;
+            })
+            .catch(error => {
+                // Handle errors
+                document.getElementById("word").textContent = "Failed to load Word of the Day.";
+                console.error("Error fetching RSS feed:", error);
+            });
+    </script>
+</body>
+</html>
